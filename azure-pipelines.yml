@@ -70,11 +70,11 @@ stages:
          - task: AWSCLI@1
            displayName: 'Configure kubeconfig'
            inputs:
-             awsCredentials: 'aws-ecr-connection'
+             awsCredentials: 'aws-ecr-connection'                # <-- твой AWS Service Connection (IAM User с нужными правами)
              regionName: '$(awsRegion)'
              awsCommand: 'eks'
              awsSubCommand: 'update-kubeconfig'
-             arguments: '--name my-eks-cluster --region us-east-1'   
+             arguments: "--name $(clusterName) --region $(awsRegion)"   
  
          - script: |
              kubectl get nodes
