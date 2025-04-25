@@ -58,6 +58,13 @@ stages:
       - job: DeployJob
         steps:
           - checkout: self
+          - script: |
+              echo "=== Проверка переменных ==="
+              echo "Cluster Name = $(clusterName)"
+              echo "AWS Region   = $(awsRegion)"
+            displayName: 'Check Variables'    # <-- Вот сюда добавляем проверку!
+
+        
           - task: AWSCLI@1  # Генерируем kubeconfig через AWS CLI
             displayName: 'Configure kubeconfig'
             inputs:
