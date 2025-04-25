@@ -75,7 +75,7 @@ stages:
               regionName: '$(awsRegion)'
               awsCommand: 'eks'
               awsSubCommand: 'update-kubeconfig'
-              arguments: '--name $(clusterName) --region $(awsRegion)'
+              arguments: "--name $(clusterName) --region $(awsRegion)"
           - script: |
               kubectl get nodes  # Проверяем доступ к EKS
             displayName: 'Check Cluster Access'
