@@ -25,11 +25,12 @@ stages:
           - task: AWSCLI@1
             displayName: 'Login to AWS ECR'
             inputs:
-              awsCredentials: 'aws-ecr-connection'  # <-- имя твоего AWS Service Connection!
+              awsCredentials: 'aws-ecr-connection'           # <-- имя твоего AWS Service Connection
               regionName: 'us-east-1'
-              command: 'ecr'
-              awsSubCommand: 'get-login-password'
+              awsCommand: 'ecr'                                  # <-- обязательно!
+              awsSubCommand: 'get-login-password'                # <-- обязательно!
               arguments: '--region us-east-1 | docker login --username AWS --password-stdin 767398133420.dkr.ecr.us-east-1.amazonaws.com'
+
                
           - task: Docker@2
             displayName: 'Build and Push Docker image'
