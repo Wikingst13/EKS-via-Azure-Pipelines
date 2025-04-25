@@ -68,14 +68,16 @@ stages:
             displayName: 'Check Variables'    # <-- Вот сюда добавляем проверку!
 
         
-          - task: AWSCLI@1  # Генерируем kubeconfig через AWS CLI
+        
+        
+          - task: AWSCLI@1
             displayName: 'Configure kubeconfig'
             inputs:
-              awsCredentials: 'aws-ecr-connection'
+              awsCredentials: 'aws-ecr-connection'            # <-- если creds норм, пусть так
               regionName: '$(awsRegion)'
-              awsCommand: 'eks'
-              awsSubCommand: 'update-kubeconfig'
-              arguments: "--name $(clusterName) --region $(awsRegion)"
+              awsCommand: 'eks'                               # <-- вот это ПРАВИЛЬНО!
+              awsSubCommand: 'update-kubeconfig'              # <-- тоже обязательно!
+              arguments: "--name $(clusterName) --region $(awsRegion)"    # <-- кавычки для безопасного разворачивания
           - script: |
               kubectl get nodes  # Проверяем доступ к EKS
             displayName: 'Check Cluster Access'
