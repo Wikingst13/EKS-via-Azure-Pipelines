@@ -2,7 +2,7 @@ trigger:
   - main  # Запускать пайплайн при пуше в main
 
 variables:
-  imageName: 'my-app'
+  imageName: 'my-app_131289'
   awsRegion: 'us-east-1'
   clusterName: 'my-eks-cluster'
   ecrRegistry: '767398133420.dkr.ecr.us-east-1.amazonaws.com'
@@ -31,7 +31,11 @@ stages:
               awsSubCommand: 'get-login-password'                # <-- обязательно!
               arguments: '--region us-east-1 | docker login --username AWS --password-stdin 767398133420.dkr.ecr.us-east-1.amazonaws.com'
 
-               
+          - task: Docker@2
+            displayName: 'Login to ECR'
+            inputs:
+              command: 'login'
+              containerRegistry: 'ecr-docker-connection'     
           - task: Docker@2
             displayName: 'Build and Push Docker image'
             inputs:
