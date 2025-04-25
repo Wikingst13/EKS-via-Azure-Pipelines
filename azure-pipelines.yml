@@ -22,8 +22,13 @@ stages:
             inputs:
               command: 'login'
               containerRegistry: 'ecr-docker-connection'
-          - script: |
-                aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 767398133420.dkr.ecr.us-east-1.amazonaws.com
+          - task: AWSCLI@1
+            displayName: 'Login to AWS ECR'
+            inputs:
+            awsCredentials: 'aws-ecr-connection'  # <-- имя твоего AWS Service Connection!
+            regionName: 'us-east-1'
+            command: 'ecr'
+            arguments: 'get-login-password --region us-east-1 | docker login --username AWS --password-stdin 767398133420.dkr.ecr.us-east-1.amazonaws.com'
             displayName: 'Manual ECR Login Test' 
           - task: Docker@2
             displayName: 'Build and Push Docker image'
