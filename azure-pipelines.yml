@@ -63,8 +63,9 @@ stages:
             inputs:
               awsCredentials: 'aws-ecr-connection'
               regionName: '$(awsRegion)'
-              command: 'eks'
-              arguments: 'update-kubeconfig --name $(clusterName) --region $(awsRegion)'
+              awsCommand: 'eks'
+              awsSubCommand: 'update-kubeconfig'
+              arguments: '--name $(clusterName) --region $(awsRegion)'
           - script: |
               kubectl get nodes  # Проверяем доступ к EKS
             displayName: 'Check Cluster Access'
