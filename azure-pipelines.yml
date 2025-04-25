@@ -54,6 +54,9 @@ stages:
   - stage: Deploy
     displayName: 'Deploy to EKS'
     dependsOn: Build  # Выполняем Deploy только если Build успешен
+    variables:                          # <-- ДОБАВЛЯЕМ ЭТО ВНУТРИ Deploy stage!
+      awsRegion: 'us-east-1'
+      clusterName: 'my-eks-cluster'
     jobs:
       - job: DeployJob
         steps:
