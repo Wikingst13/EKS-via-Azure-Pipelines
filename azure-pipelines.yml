@@ -53,39 +53,39 @@ stages:
 
   - stage: Deploy
     displayName: 'Deploy to EKS'
-    dependsOn: Build  # Выполняем Deploy только если Build успешен
-    variables:                          # <-- ДОБАВЛЯЕМ ЭТО ВНУТРИ Deploy stage!
-      awsRegion: 'us-east-1'
-      clusterName: 'my-eks-cluster'
+    dependsOn: Build
     jobs:
-      - job: DeployJob
-        steps:
-          - checkout: self
-          - script: |
-              echo "=== Проверка переменных ==="
-              echo "Cluster Name = $(clusterName)"
-              echo "AWS Region   = $(awsRegion)"
-            displayName: 'Check Variables'    # <-- Вот сюда добавляем проверку!
-
-        
-        
-        
-          - task: AWSCLI@1
-            displayName: 'Configure kubeconfig'
-            inputs:
-              awsCredentials: 'aws-ecr-connection'            # <-- если creds норм, пусть так
-              regionName: '$(awsRegion)'
-              awsCommand: 'eks'                               # <-- вот это ПРАВИЛЬНО!
-              awsSubCommand: 'update-kubeconfig'              # <-- тоже обязательно!
-              arguments: "--name $(clusterName) --region $(awsRegion)"    # <-- кавычки для безопасного разворачивания
-          - script: |
-              kubectl get nodes  # Проверяем доступ к EKS
-            displayName: 'Check Cluster Access'
-          - task: Kubernetes@1
-            displayName: 'Deploy Kubernetes manifests'
-            inputs:
-              connectionType: 'None'  # kubeconfig уже настроен через AWSCLI
-              namespace: 'dev'
-              command: 'apply'
-              useConfigurationFile: true
-              configuration: 'k8s/deployment.yaml'
+     - job: DeployJob
+       variables:                            # <-- Вот тут нужно!
+         awsRegion: 'us-east-1'
+         clusterName: 'my-eks-cluster'
+       steps:
+         - checkout: self
+         - script: |
+             echo "=== Проверка переменных ==="
+             echo "Cluster Name = $(clusterName)"
+             echo "AWS Region   = $(awsRegion)"
+           displayName: 'Check Variables'
+ 
+         - task: AWSCLI@1
+           displayName: 'Configure kubeconfig'
+           inputs:
+             awsCredentials: 'aws-ecr-connection'
+             regionName: '$(awsRegion)'
+             awsCommand: 'eks'
+             awsSubCommand: 'update-kubeconfig'
+             arguments: "--name $(clusterName) --region $(awsRegion)"
+ 
+         - script: |
+             kubectl get nodes
+           displayName: 'Check Cluster Access'
+ 
+         - task: Kubernetes@1
+           displayName: 'Deploy Kubernetes manifests'
+           inputs:
+             connectionType: 'None'
+             namespace: 'dev'
+             command: 'apply'
+             useConfigurationFile: true
+             configuration: 'k8s/deployment.yaml'
+ 
