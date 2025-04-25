@@ -71,13 +71,11 @@ stages:
            displayName: 'Configure kubeconfig'
            inputs:
              awsCredentials: 'aws-ecr-connection'
-             regionName: 'us-east-1'                       # <-- можно оставить хардкод для проверки!
+             regionName: 'us-east-1'
              awsCommand: 'eks'
-             awsSubCommand: 'update-kubeconfig'
-             arguments: "--name $CLUSTER_NAME --region $AWS_REGION"   # <-- ВАЖНО: переменные из ENV, не Azure!
-           env:
-             CLUSTER_NAME: $(clusterName)
-             AWS_REGION: $(awsRegion)   
+             # awsSubCommand: 'update-kubeconfig'          # <-- УБРАТЬ!
+             arguments: "update-kubeconfig --name my-eks-cluster --region us-east-1"
+        
  
          - script: |
              kubectl get nodes
