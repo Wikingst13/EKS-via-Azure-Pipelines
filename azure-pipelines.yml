@@ -73,8 +73,7 @@ stages:
              awsCredentials: 'aws-ecr-connection'
              regionName: '$(awsRegion)'
              awsCommand: 'eks'
-             awsSubCommand: 'update-kubeconfig'
-             arguments: "--name $(clusterName) --region $(awsRegion)"
+             arguments: 'update-kubeconfig --name $(clusterName) --region $(awsRegion)'   
  
          - script: |
              kubectl get nodes
